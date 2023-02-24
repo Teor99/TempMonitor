@@ -1,5 +1,7 @@
 # Монитор температуры на основе Blynk и nodeMCU
 
+<img src="./docs/client_screen.jpg" height="400">
+
 ## Ссылки
 
 [https://www.blynk.cc](http://www.blynk.cc)
