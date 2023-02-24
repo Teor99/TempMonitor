@@ -1,4 +1,4 @@
-# Монитор температуры на основе Blynk и nodeMCU
+# Мониторинг температуры на основе Blynk и nodeMCU
 
 <img src="./docs/prewiev.jpg" width="854" height="480">
 
