@@ -1,6 +1,6 @@
 # Монитор температуры на основе Blynk и nodeMCU
 
-<img src="./docs/client_screen.jpg" height="400">
+<img src="./docs/prewiev.jpg" width="854" height="480">
 
 ## Ссылки
 
