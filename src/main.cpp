@@ -67,6 +67,8 @@ bool isInvertRelayLogicLevel = true;
 char auth[] = "please_enter_your_blynk_token";
 char ssid[] = "please_enter_your_wifi_ssid";
 char pass[] = "please_enter_your_wifi_password";
+#define SERVER_IP_ADDRESS IPAddress(192, 168, 0, 101)
+#define SERVER_PORT 8080
 
 BlynkTimer timer;
 
@@ -135,7 +137,7 @@ void setup() {
     // Blynk.begin(auth, ssid, pass);
     // You can also specify server:
     // Blynk.begin(auth, ssid, pass, "blynk-cloud.com", 80);
-    Blynk.begin(auth, ssid, pass, IPAddress(192, 168, 0, 101), 8080);
+    Blynk.begin(auth, ssid, pass, SERVER_IP_ADDRESS, SERVER_PORT);
 
     // Setup a function to be called every second
     timer.setInterval(1000L, myTimerEvent);
