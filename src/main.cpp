@@ -110,10 +110,12 @@ void myTimerEvent() {
     Blynk.virtualWrite(BLYNK_VPIN_DS18B20_2, sensors.getTempC(tempSensor2));
 
     // DHT11
-    // temperature
     sensors_event_t event;
+    // temperature
     dht.temperature().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_TEMP, event.temperature);
+    // humidity
+    dht.humidity().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_HUMIDITY, event.relative_humidity);
 }
 
