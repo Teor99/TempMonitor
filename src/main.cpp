@@ -109,7 +109,7 @@ RelayControlStateStruct relay1ControlState;
 RelayControlStateStruct relay2ControlState;
 
 // Установить состояние пина реле
-void setRelayState(uint8_t pin, uint8_t logicLevel) {
+void setRelayPinState(uint8_t pin, uint8_t logicLevel) {
     digitalWrite(pin, isInvertRelayLogicLevel ? !logicLevel : logicLevel);
 }
 
@@ -125,12 +125,12 @@ BLYNK_WRITE(BLYNK_VPIN_RELAY2_TEMP_CONTROL_SWITCH) {
 
 // Обработчик нажатия на переключатель реле3
 BLYNK_WRITE(BLYNK_VPIN_RELAY3_SWITCH) {
-    setRelayState(PIN_RELAY3, param.asInt());
+    setRelayPinState(PIN_RELAY3, param.asInt());
 }
 
 // Обработчик нажатия на переключатель реле4
 BLYNK_WRITE(BLYNK_VPIN_RELAY4_SWITCH) {
-    setRelayState(PIN_RELAY4, param.asInt());
+    setRelayPinState(PIN_RELAY4, param.asInt());
 }
 
 // Обработчик на изменение положения слайдера заданной температуры для реле1
@@ -196,11 +196,11 @@ void myTimerEvent() {
     // Обновить состояние контролируемых по температуре реле
     // #1
     updateRelayState(&relay1ControlState);
-    setRelayState(PIN_RELAY1, relay1ControlState.isRelayOn);
+    setRelayPinState(PIN_RELAY1, relay1ControlState.isRelayOn);
     relay1Led.setValue(relay1ControlState.isRelayOn * 255);
     // #2
     updateRelayState(&relay2ControlState);
-    setRelayState(PIN_RELAY2, relay2ControlState.isRelayOn);
+    setRelayPinState(PIN_RELAY2, relay2ControlState.isRelayOn);
     relay2Led.setValue(relay2ControlState.isRelayOn * 255);
 }
 
@@ -224,10 +224,10 @@ void setup() {
     pinMode(PIN_RELAY2, OUTPUT);
     pinMode(PIN_RELAY3, OUTPUT);
     pinMode(PIN_RELAY4, OUTPUT);
-    setRelayState(PIN_RELAY1, 0);
-    setRelayState(PIN_RELAY2, 0);
-    setRelayState(PIN_RELAY3, 0);
-    setRelayState(PIN_RELAY4, 0);
+    setRelayPinState(PIN_RELAY1, 0);
+    setRelayPinState(PIN_RELAY2, 0);
+    setRelayPinState(PIN_RELAY3, 0);
+    setRelayPinState(PIN_RELAY4, 0);
 
     // Соединение с сервером Blynk
     Blynk.begin(auth, ssid, pass, SERVER_IP_ADDRESS, SERVER_PORT);
