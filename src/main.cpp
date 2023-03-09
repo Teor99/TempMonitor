@@ -72,8 +72,6 @@
 #define BLYNK_VPIN_RELAY3_SWITCH V25
 #define BLYNK_VPIN_RELAY4_SWITCH V26
 
-#define BLYNK_VPIN_SAVE_CONFIG_BUTTON V30
-
 // уровень логического сигнала для реле (на случай, если реле управляется инвертированым лог. сигналом)
 bool isInvertRelayLogicLevel = true;
 
