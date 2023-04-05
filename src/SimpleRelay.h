@@ -13,10 +13,10 @@ class SimpleRelay {
         this->isInvertedLogicLevel = isInvertedLogicLevel;
 
         pinMode(this->pin, OUTPUT);
-        setState(OFF);
+        setPinState(OFF);
     }
 
-    void setState(uint8_t newState) {
+    void setPinState(bool newState) {
         digitalWrite(pin, isInvertedLogicLevel ? !newState : newState);
     }
 

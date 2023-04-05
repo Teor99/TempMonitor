@@ -130,12 +130,12 @@ BLYNK_WRITE(BLYNK_VPIN_RELAY2_HISTERESIS_SLIDER) {
 
 // Обработчик нажатия на переключатель реле3
 BLYNK_WRITE(BLYNK_VPIN_RELAY3_SWITCH) {
-    relay3->setState(param.asInt());
+    relay3->setPinState(param.asInt());
 }
 
 // Обработчик нажатия на переключатель реле4
 BLYNK_WRITE(BLYNK_VPIN_RELAY4_SWITCH) {
-    relay4->setState(param.asInt());
+    relay4->setPinState(param.asInt());
 }
 
 // Обновление интерфейса Android приложения при подключении к серверу

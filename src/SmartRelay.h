@@ -23,16 +23,12 @@ class SmartRelay {
         this->vpinTemp = vpinTemp;
         this->dsBus = dsBus;
         this->deviceAddress = deviceAddress;
-
         this->stateLed = new WidgetLED(stateLedVpin);
-        this->stateLed->off();
         this->errorLed = new WidgetLED(errorLedVpin);
-        this->errorLed->off();
-
-        this->errorCount = 0;
 
         pinMode(this->pinRelay, OUTPUT);
-        setState(OFF);
+        setPinState(OFF);
+        setErrorState(OFF);
     }
 
     void updateState() {
@@ -43,25 +39,23 @@ class SmartRelay {
                 errorCount++;
 
                 if (errorCount >= ERROR_COUNT_LIMIT) {
-                    setState(OFF);
-                    errorLed->on();
+                    setErrorState(ON);
                 }
             }
         } else {
-            errorCount = 0;
-            errorLed->off();
+            setErrorState(OFF);
+        }
 
-            if (isTempControlOn) {
-                if (targetTemp > currentTemp + histeresis / 2) {
-                    // целевая температура выше текущей - включаем реле
-                    setState(ON);
-                } else if (targetTemp < currentTemp - histeresis / 2) {
-                    // целевая температура ниже текущей - выключаем реле
-                    setState(OFF);
-                }
-            } else {
-                setState(OFF);
+        if (isTempControlOn && getErrorState() == false) {
+            if (targetTemp > currentTemp + histeresis / 2) {
+                // целевая температура выше текущей - включаем реле
+                setPinState(ON);
+            } else if (targetTemp < currentTemp - histeresis / 2) {
+                // целевая температура ниже текущей - выключаем реле
+                setPinState(OFF);
             }
+        } else {
+            setPinState(OFF);
         }
     }
 
@@ -83,6 +77,22 @@ class SmartRelay {
         }
     }
 
+    void setErrorState(bool isError) {
+        this->isError = isError;
+
+        if (isError) {
+            setPinState(OFF);
+            errorLed->on();
+        } else {
+            errorLed->off();
+            errorCount = 0;
+        }
+    }
+
+    bool getErrorState() {
+        return this->isError;
+    }
+
    private:
     uint8_t pinRelay;
     int vpinTemp;
@@ -91,16 +101,16 @@ class SmartRelay {
     DallasTemperature* dsBus;
     WidgetLED* stateLed;
     WidgetLED* errorLed;
+    bool isError;
     bool isTempControlOn;
     float targetTemp;
     float currentTemp;
     float histeresis;
     uint32_t errorCount;
 
-    void setState(uint8_t newState) {
-        newState = isInvertedLogicLevel ? !newState : newState;
-        digitalWrite(pinRelay, newState);
-        stateLed->setValue(newState);
+    void setPinState(bool newState) {
+        stateLed->setValue(newState * 255);
+        digitalWrite(pinRelay, isInvertedLogicLevel ? !newState : newState);
     }
 };
 
