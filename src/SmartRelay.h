@@ -16,7 +16,7 @@ class SmartRelay {
                uint8_t stateLedVpin,
                uint8_t errorLedVpin,
                DallasTemperature* dsBus,
-               DeviceAddress* deviceAddress,
+               uint8_t* deviceAddress,
                int vpinTemp) {
         this->pinRelay = pin;
         this->isInvertedLogicLevel = isInvertedLogicLevel;
@@ -36,7 +36,7 @@ class SmartRelay {
     }
 
     void updateState() {
-        currentTemp = dsBus->getTempC(*deviceAddress);
+        currentTemp = dsBus->getTempC(deviceAddress);
 
         if (currentTemp == DEVICE_DISCONNECTED_C) {
             if (errorCount < ERROR_COUNT_LIMIT) {
@@ -87,7 +87,7 @@ class SmartRelay {
     uint8_t pinRelay;
     int vpinTemp;
     bool isInvertedLogicLevel;
-    DeviceAddress* deviceAddress;
+    uint8_t* deviceAddress;
     DallasTemperature* dsBus;
     WidgetLED* stateLed;
     WidgetLED* errorLed;

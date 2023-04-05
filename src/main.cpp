@@ -87,6 +87,9 @@ BlynkTimer timer;
 
 DallasTemperature* dsBus;
 
+DeviceAddress tempSensor1Address = {0x28, 0x76, 0x1F, 0x56, 0xB5, 0x01, 0x3C, 0xA6};
+DeviceAddress tempSensor2Address = {0x28, 0xFF, 0x04, 0xD4, 0x44, 0x16, 0x03, 0x53};
+
 SmartRelay* smartRelay1;
 SmartRelay* smartRelay2;
 SimpleRelay* relay3;
@@ -177,22 +180,20 @@ void setup() {
     // 12 - 0.0625°C
     dsBus->setResolution(9);
 
-    DeviceAddress tempSensor1Address = {0x28, 0x76, 0x1F, 0x56, 0xB5, 0x01, 0x3C, 0xA6};
     smartRelay1 = new SmartRelay(PIN_RELAY1,
                                  true,
                                  BLYNK_VPIN_RELAY1_STATE_LED,
                                  BLYNK_VPIN_RELAY1_ERROR_LED,
                                  dsBus,
-                                 &tempSensor1Address,
+                                 tempSensor1Address,
                                  BLYNK_VPIN_DS18B20_1);
 
-    DeviceAddress tempSensor2Address = {0x28, 0xFF, 0x04, 0xD4, 0x44, 0x16, 0x03, 0x53};
     smartRelay2 = new SmartRelay(PIN_RELAY2,
                                  true,
                                  BLYNK_VPIN_RELAY2_STATE_LED,
                                  BLYNK_VPIN_RELAY2_ERROR_LED,
                                  dsBus,
-                                 &tempSensor2Address,
+                                 tempSensor2Address,
                                  BLYNK_VPIN_DS18B20_1);
 
     relay3 = new SimpleRelay(PIN_RELAY3, true);
