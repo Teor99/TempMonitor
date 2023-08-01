@@ -77,9 +77,9 @@
 #define BLYNK_VPIN_RELAY3_SWITCH V25
 #define BLYNK_VPIN_RELAY4_SWITCH V26
 
-char auth[] = "please_enter_your_blynk_token";
-char ssid[] = "please_enter_your_wifi_ssid";
-char pass[] = "please_enter_your_wifi_password";
+#define BLYNK_TOKEN "please_enter_your_blynk_token";
+#define WIFI_SSID "please_enter_your_wifi_ssid";
+#define WIFI_PASSWORD "please_enter_your_wifi_password";
 #define SERVER_IP_ADDRESS IPAddress(192, 168, 0, 101)
 #define SERVER_PORT 8080
 
@@ -200,7 +200,7 @@ void setup() {
     dsBus.setResolution(9);
 
     // Соединение с сервером Blynk
-    Blynk.begin(auth, ssid, pass, SERVER_IP_ADDRESS, SERVER_PORT);
+    Blynk.begin(BLYNK_TOKEN, WIFI_SSID, WIFI_PASSWORD, SERVER_IP_ADDRESS, SERVER_PORT);
 
     // Таймер для обновления состояния
     timer.setInterval(1000L, myTimerEvent);
