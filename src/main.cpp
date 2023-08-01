@@ -85,57 +85,76 @@ char pass[] = "please_enter_your_wifi_password";
 
 BlynkTimer timer;
 
-DallasTemperature* dsBus;
-
+// DS18b20
+OneWire oneWire(PIN_DS18B20);
+DallasTemperature dsBus(&oneWire);
 DeviceAddress tempSensor1Address = {0x28, 0x76, 0x1F, 0x56, 0xB5, 0x01, 0x3C, 0xA6};
 DeviceAddress tempSensor2Address = {0x28, 0xFF, 0x04, 0xD4, 0x44, 0x16, 0x03, 0x53};
-
-SmartRelay* smartRelay1;
-SmartRelay* smartRelay2;
-SimpleRelay* relay3;
-SimpleRelay* relay4;
 
 // DHT11
 DHT_Unified dht(PIN_DHT11, DHT11);
 
+// LEDS
+WidgetLED relay1StateLed(BLYNK_VPIN_RELAY1_STATE_LED);
+WidgetLED relay1ErrorLed(BLYNK_VPIN_RELAY1_ERROR_LED);
+WidgetLED relay2StateLed(BLYNK_VPIN_RELAY2_STATE_LED);
+WidgetLED relay2ErrorLed(BLYNK_VPIN_RELAY2_ERROR_LED);
+
+SmartRelay smartRelay1(PIN_RELAY1,
+                       true,
+                       relay1StateLed,
+                       relay1ErrorLed,
+                       dsBus,
+                       tempSensor1Address,
+                       BLYNK_VPIN_DS18B20_1);
+SmartRelay smartRelay2(PIN_RELAY2,
+                       true,
+                       relay2StateLed,
+                       relay2ErrorLed,
+                       dsBus,
+                       tempSensor2Address,
+                       BLYNK_VPIN_DS18B20_1);
+SimpleRelay relay3(PIN_RELAY3, true);
+SimpleRelay relay4(PIN_RELAY4, true);
+
 // Обработчик нажатия на переключатель контроля по температуре для реле1
 BLYNK_WRITE(BLYNK_VPIN_RELAY1_TEMP_CONTROL_SWITCH) {
-    smartRelay1->setTempConrolState(param.asInt());
+    param.asInt() ? smartRelay1.enableTempConrol() : smartRelay1.disableTempConrol();
 }
 
 // Обработчик нажатия на переключатель контроля по температуре для реле2
 BLYNK_WRITE(BLYNK_VPIN_RELAY2_TEMP_CONTROL_SWITCH) {
-    smartRelay2->setTempConrolState(param.asInt());
+    param.asInt() ? smartRelay2.enableTempConrol() : smartRelay2.disableTempConrol();
 }
 
 // Обработчик на изменение положения слайдера заданной температуры для реле1
 BLYNK_WRITE(BLYNK_VPIN_RELAY1_TARGET_TEMP_SLIDER) {
-    smartRelay1->setTargerTemp(param.asFloat());
+    smartRelay1.setTargerTemp(param.asFloat());
 }
 
 // Обработчик на изменение положения слайдера заданной температуры для реле2
 BLYNK_WRITE(BLYNK_VPIN_RELAY2_TARGET_TEMP_SLIDER) {
-    smartRelay2->setTargerTemp(param.asFloat());
+    smartRelay2.setTargerTemp(param.asFloat());
 }
 
 // Обработчик на изменение положения слайдера гистерезиса для реле1
 BLYNK_WRITE(BLYNK_VPIN_RELAY1_HISTERESIS_SLIDER) {
-    smartRelay1->setHisteresis(param.asFloat());
+    smartRelay1.setHisteresis(param.asFloat());
 }
 
 // Обработчик на изменение положения слайдера гистерезиса для реле2
 BLYNK_WRITE(BLYNK_VPIN_RELAY2_HISTERESIS_SLIDER) {
-    smartRelay2->setHisteresis(param.asFloat());
+    smartRelay2.setHisteresis(param.asFloat());
 }
 
 // Обработчик нажатия на переключатель реле3
 BLYNK_WRITE(BLYNK_VPIN_RELAY3_SWITCH) {
-    relay3->setPinState(param.asInt());
+    param.asInt() ? relay3.enableRelay() : relay3.disableRelay();
 }
 
 // Обработчик нажатия на переключатель реле4
 BLYNK_WRITE(BLYNK_VPIN_RELAY4_SWITCH) {
-    relay4->setPinState(param.asInt());
+    param.asInt() ? relay4.enableRelay() : relay4.disableRelay();
 }
 
 // Обновление интерфейса Android приложения при подключении к серверу
@@ -146,13 +165,13 @@ BLYNK_CONNECTED() {
 // Обновление состояния через заданный интервал
 void myTimerEvent() {
     // Обновить состояние контролируемых по температуре реле
-    dsBus->requestTemperatures();
+    dsBus.requestTemperatures();
     // #1
-    smartRelay1->updateState();
-    smartRelay1->sendTempToClient();
+    smartRelay1.updateState();
+    smartRelay1.sendTempToClient();
     // #2
-    smartRelay2->updateState();
-    smartRelay2->sendTempToClient();
+    smartRelay2.updateState();
+    smartRelay2.sendTempToClient();
 
     // DHT11
     sensors_event_t event;
@@ -173,31 +192,12 @@ void setup() {
 
     // DS18B20
     dsBus = new DallasTemperature(new OneWire(PIN_DS18B20));
-    dsBus->begin();
+    dsBus.begin();
     // 9 - 0.5°C
     // 10 - 0.25°C
     // 11 - 0.125°C
     // 12 - 0.0625°C
-    dsBus->setResolution(9);
-
-    smartRelay1 = new SmartRelay(PIN_RELAY1,
-                                 true,
-                                 BLYNK_VPIN_RELAY1_STATE_LED,
-                                 BLYNK_VPIN_RELAY1_ERROR_LED,
-                                 dsBus,
-                                 tempSensor1Address,
-                                 BLYNK_VPIN_DS18B20_1);
-
-    smartRelay2 = new SmartRelay(PIN_RELAY2,
-                                 true,
-                                 BLYNK_VPIN_RELAY2_STATE_LED,
-                                 BLYNK_VPIN_RELAY2_ERROR_LED,
-                                 dsBus,
-                                 tempSensor2Address,
-                                 BLYNK_VPIN_DS18B20_1);
-
-    relay3 = new SimpleRelay(PIN_RELAY3, true);
-    relay4 = new SimpleRelay(PIN_RELAY4, true);
+    dsBus.setResolution(9);
 
     // Соединение с сервером Blynk
     Blynk.begin(auth, ssid, pass, SERVER_IP_ADDRESS, SERVER_PORT);
