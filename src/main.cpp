@@ -191,7 +191,6 @@ void setup() {
     dht.begin();
 
     // DS18B20
-    dsBus = new DallasTemperature(new OneWire(PIN_DS18B20));
     dsBus.begin();
     // 9 - 0.5°C
     // 10 - 0.25°C
