@@ -113,7 +113,7 @@ SmartRelay smartRelay2(PIN_RELAY2,
                        relay2ErrorLed,
                        dsBus,
                        tempSensor2Address,
-                       BLYNK_VPIN_DS18B20_1);
+                       BLYNK_VPIN_DS18B20_2);
 SimpleRelay relay3(PIN_RELAY3, true);
 SimpleRelay relay4(PIN_RELAY4, true);
 
