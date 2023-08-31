@@ -6,9 +6,9 @@
 
 #define ERROR_COUNT_LIMIT 10
 
-SmartRelay::SmartRelay(uint8_t pin, bool isInvertedLogicLevel, WidgetLED* stateLed, WidgetLED* errorLed, DallasTemperature* dsBus, uint8_t* deviceAddress, int vpinTemp)
-    : SimpleRelay(pin, isInvertedLogicLevel) {
-    this->vpinTemp = vpinTemp;
+SmartRelay::SmartRelay(uint8_t pin, bool isInvertedLogicLevel, WidgetLED* stateLed, WidgetLED* errorLed, DallasTemperature* dsBus, uint8_t* deviceAddress, int vpinTemp) : SimpleRelay(pin, isInvertedLogicLevel){
+    // this->pin = pin;
+    // this->isInvertedLogicLevel = isInvertedLogicLevel;
     this->dsBus = dsBus;
     this->deviceAddress = deviceAddress;
     this->stateLed = stateLed;

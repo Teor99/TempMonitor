@@ -2,16 +2,19 @@
 #define SmartRelay_h
 
 #include "SimpleRelay.h"
+#include <DallasTemperature.h>
 
-class SmartRelay : SimpleRelay {
+#include "BlynkHeaders.h"
+
+class SmartRelay : public SimpleRelay {
    public:
     SmartRelay(uint8_t pin,
-               bool isInvertedLogicLevel,
-               WidgetLED* stateLed,
-               WidgetLED* errorLed,
-               DallasTemperature* dsBus,
-               uint8_t* deviceAddress,
-               int vpinTemp);
+            bool isInvertedLogicLevel,
+            WidgetLED* stateLed,
+            WidgetLED* errorLed,
+            DallasTemperature* dsBus,
+            uint8_t* deviceAddress,
+            int vpinTemp);
 
     void updateState();
     void enableRelay();

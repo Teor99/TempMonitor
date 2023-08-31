@@ -1,7 +1,5 @@
 #include "SimpleRelay.h"
 
-#include <Arduino.h>
-
 SimpleRelay::SimpleRelay(uint8_t pin, bool isInvertedLogicLevel) {
     this->pin = pin;
     this->isInvertedLogicLevel = isInvertedLogicLevel;

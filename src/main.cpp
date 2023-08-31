@@ -32,8 +32,7 @@
 /* Comment this out to disable prints and save space */
 #define BLYNK_PRINT Serial
 
-#include <BlynkSimpleEsp8266.h>
-#include <ESP8266WiFi.h>
+#include "BlynkHeaders.h"
 
 // DS18b20
 #include <DallasTemperature.h>
@@ -77,9 +76,9 @@
 #define BLYNK_VPIN_RELAY3_SWITCH V25
 #define BLYNK_VPIN_RELAY4_SWITCH V26
 
-#define BLYNK_TOKEN "please_enter_your_blynk_token";
-#define WIFI_SSID "please_enter_your_wifi_ssid";
-#define WIFI_PASSWORD "please_enter_your_wifi_password";
+#define BLYNK_TOKEN "please_enter_your_blynk_token"
+#define WIFI_SSID "please_enter_your_wifi_ssid"
+#define WIFI_PASSWORD "please_enter_your_wifi_password"
 #define SERVER_IP_ADDRESS IPAddress(192, 168, 0, 101)
 #define SERVER_PORT 8080
 
@@ -102,16 +101,16 @@ WidgetLED relay2ErrorLed(BLYNK_VPIN_RELAY2_ERROR_LED);
 
 SmartRelay smartRelay1(PIN_RELAY1,
                        true,
-                       relay1StateLed,
-                       relay1ErrorLed,
-                       dsBus,
+                       &relay1StateLed,
+                       &relay1ErrorLed,
+                       &dsBus,
                        tempSensor1Address,
                        BLYNK_VPIN_DS18B20_1);
 SmartRelay smartRelay2(PIN_RELAY2,
                        true,
-                       relay2StateLed,
-                       relay2ErrorLed,
-                       dsBus,
+                       &relay2StateLed,
+                       &relay2ErrorLed,
+                       &dsBus,
                        tempSensor2Address,
                        BLYNK_VPIN_DS18B20_2);
 SimpleRelay relay3(PIN_RELAY3, true);
