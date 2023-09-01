@@ -197,7 +197,7 @@ void myTimerEvent() {
     dht.humidity().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_HUMIDITY, event.relative_humidity);
     Serial.print(" hum: ");
-    Serial.println(event.temperature);
+    Serial.println(event.relative_humidity);
 }
 
 void setup() {
