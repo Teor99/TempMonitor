@@ -1,15 +1,20 @@
 #include "SmartRelay.h"
 
 #include <Arduino.h>
-#include <BlynkSimpleEsp8266.h>
 #include <DallasTemperature.h>
 
 #define ERROR_COUNT_LIMIT 10
 
-SmartRelay::SmartRelay(uint8_t pin, bool isInvertedLogicLevel, WidgetLED* stateLed, WidgetLED* errorLed, DallasTemperature* dsBus, uint8_t* deviceAddress, int vpinTemp) : SimpleRelay(pin, isInvertedLogicLevel){
-    // this->pin = pin;
-    // this->isInvertedLogicLevel = isInvertedLogicLevel;
+SmartRelay::SmartRelay(uint8_t pin,
+                    bool isInvertedLogicLevel,
+                    WidgetLED* stateLed,
+                    WidgetLED* errorLed,
+                    DallasTemperature* dsBus,
+                    uint8_t* deviceAddress,
+                    int vpinTemp)
+            : SimpleRelay(pin, isInvertedLogicLevel) {
     this->dsBus = dsBus;
+    this->vpinTemp = vpinTemp;
     this->deviceAddress = deviceAddress;
     this->stateLed = stateLed;
     this->errorLed = errorLed;
@@ -74,6 +79,10 @@ void SmartRelay::setHisteresis(float histeresis) {
 
 void SmartRelay::sendTempToClient() {
     if (currentTemp != DEVICE_DISCONNECTED_C) {
+        Serial.print("Temp: ");
+        Serial.print(currentTemp);
+        Serial.print(" Vpin: ");
+        Serial.println(vpinTemp);
         Blynk.virtualWrite(vpinTemp, currentTemp);
     }
 }

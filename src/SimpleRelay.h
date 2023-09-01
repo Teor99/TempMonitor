@@ -9,7 +9,7 @@ class SimpleRelay {
     void enableRelay();
     void disableRelay();
 
-   protected:
+   private:
     uint8_t pin;
     bool isInvertedLogicLevel;
 };

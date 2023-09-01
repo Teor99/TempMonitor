@@ -3,8 +3,7 @@
 
 #include "SimpleRelay.h"
 #include <DallasTemperature.h>
-
-#include "BlynkHeaders.h"
+#include <BlynkSimpleEsp8266.h>
 
 class SmartRelay : public SimpleRelay {
    public:

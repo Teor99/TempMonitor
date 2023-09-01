@@ -32,7 +32,19 @@
 /* Comment this out to disable prints and save space */
 #define BLYNK_PRINT Serial
 
-#include "BlynkHeaders.h"
+/*
+1. In the header BlynkSimpleEsp8266.h, replace
+BlynkWifi Blynk(_blynkTransport);
+with
+extern BlynkWifi Blynk;
+
+2. In the main .ino file, right below the #include <BlynkSimpleEsp8266.h>, add
+BlynkWifi Blynk(_blynkTransport);
+
+3. Shamelessly include the BlynkSimpleEsp8266 header in as many places as you want with no remorse.
+*/
+#include <BlynkSimpleEsp8266.h>
+BlynkWifi Blynk(_blynkTransport);
 
 // DS18b20
 #include <DallasTemperature.h>
@@ -43,6 +55,7 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
+// Relay logic classes
 #include "SimpleRelay.h"
 #include "SmartRelay.h"
 
@@ -76,6 +89,7 @@
 #define BLYNK_VPIN_RELAY3_SWITCH V25
 #define BLYNK_VPIN_RELAY4_SWITCH V26
 
+// connection and login data
 #define BLYNK_TOKEN "please_enter_your_blynk_token"
 #define WIFI_SSID "please_enter_your_wifi_ssid"
 #define WIFI_PASSWORD "please_enter_your_wifi_password"
@@ -177,9 +191,13 @@ void myTimerEvent() {
     // temperature
     dht.temperature().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_TEMP, event.temperature);
+    Serial.print("DHT11 temp: ");
+    Serial.print(event.temperature);
     // humidity
     dht.humidity().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_HUMIDITY, event.relative_humidity);
+    Serial.print(" hum: ");
+    Serial.println(event.temperature);
 }
 
 void setup() {
