@@ -18,6 +18,10 @@
 -   Blynk сервер v0.41.17
 -   Blynk ардуино библиотека v0.6.1
 
+Перед сборкой:
+1. скопировать папку Blynk из `docs\to_libdeps.7z` в папку `.pio\libdeps\d1_mini`
+2. в конце файла `.pio\libdeps\d1_mini\Blynk\src\BlynkSimpleEsp8266.h` заменить строку `BlynkWifi Blynk(_blynkTransport);` на `extern BlynkWifi Blynk;` чтобы избавиться от ошибки `src\main.cpp:47:11: error: redefinition of 'BlynkWifi Blynk'` [link](https://arduino.stackexchange.com/questions/58358/how-to-avoid-multiple-definition-of-blynk-error)
+
 ## Таблица виртуальных пинов
 
 | Название                                                     | Виртуальный пин |
