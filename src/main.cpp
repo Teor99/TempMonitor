@@ -59,6 +59,10 @@ BlynkWifi Blynk(_blynkTransport);
 #include "SimpleRelay.h"
 #include "SmartRelay.h"
 
+// логирование температуры в com
+#define DHT11_TEMP_LOG 0
+#define DS18B20_TEMP_LOG 0
+
 // маски реальных пинов nodeMCU
 #define PIN_DHT11 D1
 #define PIN_DS18B20 D2
@@ -101,8 +105,8 @@ BlynkTimer timer;
 // DS18b20
 OneWire oneWire(PIN_DS18B20);
 DallasTemperature dsBus(&oneWire);
-DeviceAddress tempSensor1Address = {0x28, 0xF7, 0x46, 0x57, 0x04, 0xE1, 0x3C, 0xF0};
-DeviceAddress tempSensor2Address = {0x28, 0x89, 0x89, 0x57, 0x04, 0x26, 0x3C, 0xEC};
+DeviceAddress tempSensor1Address = {0x28, 0x76, 0x1F, 0x56, 0xB5, 0x01, 0x3C, 0xA6};
+DeviceAddress tempSensor2Address = {0x28, 0xFF, 0x04, 0xD4, 0x44, 0x16, 0x03, 0x53};
 
 // DHT11
 DHT_Unified dht(PIN_DHT11, DHT11);
@@ -186,18 +190,42 @@ void myTimerEvent() {
     smartRelay2.updateState();
     smartRelay2.sendTempToClient();
 
-    // DHT11
+    // DS18B20 LOG
+    if (DS18B20_TEMP_LOG) {
+        float temp = smartRelay1.getSavedTemp();
+        if (temp == DEVICE_DISCONNECTED_C) {
+            Serial.println("DS18B20 #1 disconnected");
+        } else {
+            Serial.print("DS18B20 #1 temp: ");
+            Serial.println(temp);
+        }
+
+        temp = smartRelay2.getSavedTemp();
+        if (temp == DEVICE_DISCONNECTED_C) {
+            Serial.println("DS18B20 #2 disconnected");
+        } else {
+            Serial.print("DS18B20 #2 temp: ");
+            Serial.println(temp);
+        }
+    }
+
+    // DHT11 update
     sensors_event_t event;
     // temperature
     dht.temperature().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_TEMP, event.temperature);
-    Serial.print("DHT11 temp: ");
-    Serial.print(event.temperature);
     // humidity
     dht.humidity().getEvent(&event);
     Blynk.virtualWrite(BLYNK_VPIN_DHT11_HUMIDITY, event.relative_humidity);
-    Serial.print(" hum: ");
-    Serial.println(event.relative_humidity);
+    
+    // DHT11 LOG
+    if (DHT11_TEMP_LOG) {
+        Serial.print("DHT11 temp: ");
+        Serial.print(event.temperature);
+        
+        Serial.print(" hum: ");
+        Serial.println(event.relative_humidity);
+    }
 }
 
 void setup() {

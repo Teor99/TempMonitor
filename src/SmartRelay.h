@@ -16,6 +16,7 @@ class SmartRelay : public SimpleRelay {
             int vpinTemp);
 
     void updateState();
+    float getSavedTemp();
     void enableRelay();
     void disableRelay();
 

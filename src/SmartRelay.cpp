@@ -51,6 +51,10 @@ void SmartRelay::updateState() {
     }
 }
 
+float SmartRelay::getSavedTemp() {
+    return this->currentTemp;
+}
+
 void SmartRelay::enableRelay() {
     stateLed->setValue(255);
     SimpleRelay::enableRelay();
@@ -79,10 +83,6 @@ void SmartRelay::setHisteresis(float histeresis) {
 
 void SmartRelay::sendTempToClient() {
     if (currentTemp != DEVICE_DISCONNECTED_C) {
-        Serial.print("Temp: ");
-        Serial.print(currentTemp);
-        Serial.print(" Vpin: ");
-        Serial.println(vpinTemp);
         Blynk.virtualWrite(vpinTemp, currentTemp);
     }
 }
